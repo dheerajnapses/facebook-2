@@ -16,6 +16,7 @@ import { useRouter } from 'next/navigation'
 export default function LoginSignup() {
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
+  const { setUser } = useUserStore();
 
   const registerSchema = yup.object().shape({
     username: yup.string().required("Name is required"),
@@ -42,6 +43,7 @@ export default function LoginSignup() {
     try {
       setIsLoading(true)
       const result = await loginUser(data);
+      setUser(result?.data)
       if(result.status === "success") {
         router.push('/')
       }
@@ -57,6 +59,7 @@ export default function LoginSignup() {
     try {
       setIsLoading(true)
       const result = await registerUser(data);
+      setUser(result?.data)
       console.log('Signup data:',result)
       if(result.status === "success") {
         router.push('/')
