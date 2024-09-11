@@ -143,7 +143,6 @@ const deleteUserFromRequest = async (req, res) => {
 const checkUserAuth = async (req, res) => {
     try {
         const userId = req.user.userId;
-
         // Ensure the user is authenticated
         if (!userId) {
             return response(res, 401, 'Unauthorized, please log in.');
