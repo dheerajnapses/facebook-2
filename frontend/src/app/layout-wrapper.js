@@ -17,25 +17,21 @@ const LayoutWrapper = ({ children }) => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        // Only check auth if not already logged in
-        if (!user && !isLoginPage) {
+        if (!user) {
+          // Check auth only if user is not set
           const response = await checkUserAuth();
           console.log('Auth response:', response);
 
-          // Handle authenticated user
           if (response?.isAuthenticated) {
             setUser(response);
           } else {
-            // Redirect to login if not authenticated
             router.push('/user-login');
           }
         } else if (user && isLoginPage) {
-          // Redirect authenticated user away from login page
           router.push('/');
         }
       } catch (error) {
         console.error('Authentication check failed:', error);
-        // Redirect to login on failure
         if (!isLoginPage) {
           router.push('/user-login');
         }
@@ -44,11 +40,9 @@ const LayoutWrapper = ({ children }) => {
       }
     };
 
-    checkAuth(); // Call checkAuth on mount
+    checkAuth();
+  }, [user, isLoginPage, router, setUser]);
 
-  }, [user, setUser, router, pathname, isLoginPage]);
-
-  // Show a loading spinner while checking authentication
   if (loading) {
     return <Loader />;
   }

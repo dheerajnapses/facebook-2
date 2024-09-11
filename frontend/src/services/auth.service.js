@@ -38,7 +38,7 @@ export const checkUserAuth = async () => {
     try {
       const response = await axiosInstance.get('/users/check-auth');
       console.log('Response data:', response.data);
-      return response.data;
+      return response?.data?.data;
     } catch (error) {
       if (error.response) {
         // The request was made and the server responded with a status code
