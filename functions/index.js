@@ -12,11 +12,13 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser());
 
-app.use(cors({
-    origin: "https://facebook-dxpt.onrender.com",
-    credentials: true 
-  }));
-  
+const corsOption = {
+    origin: process.env.UI_URL,
+    credentials:true,
+}
+
+app.use(cors(corsOption));
+
 connectDB();
 app.use(passport.initialize());
 
