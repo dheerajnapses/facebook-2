@@ -20,7 +20,7 @@ const LayoutWrapper = ({ children }) => {
         if (!isLoginPage) {
           const response = await checkUserAuth();
           if (response?.data?.isAuthenticated) {
-            setUser(response.data);
+            setUser(response?.data);
           } else {
             router.push('/user-login'); // Redirect to login if not authenticated
           }

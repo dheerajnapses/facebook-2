@@ -37,7 +37,7 @@ export const logout = async()=>{
 export const checkUserAuth = async () => {
     try {
       const response = await axiosInstance.get('/users/check-auth');
-      return response.data; // Ensure this matches your API response structure
+      return response?.data; // Ensure this matches your API response structure
     } catch (error) {
       if (error.response?.status === 401) {
         throw new Error('Unauthorized'); // Throw a specific error for unauthorized access
