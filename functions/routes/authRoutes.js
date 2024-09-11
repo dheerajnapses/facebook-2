@@ -21,13 +21,10 @@ router.get('/google/callback',
         const accessToken = generateToken(req.user)
         const authToken = { accessToken };
 
-        // Set token in a cookie
         res.cookie("auth_token", authToken, {
-          httpOnly: true,
-          secure: true,
-          sameSite: "strict",
-        });
-    
+            httpOnly: true,
+          });
+      
         res.redirect(`${process.env.UI_URL}`);
     }
 );

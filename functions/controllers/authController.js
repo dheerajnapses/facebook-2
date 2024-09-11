@@ -38,8 +38,6 @@ const registerUser = async (req, res) => {
     // Set token in a cookie
     res.cookie("auth_token", authToken, {
       httpOnly: true,
-      secure: true,
-      sameSite: "strict",
     });
 
     // Respond with success message and user data (excluding password)
@@ -78,9 +76,8 @@ const loginUser = async (req, res) => {
     // Set token in a cookie
     res.cookie("auth_token", authToken, {
       httpOnly: true,
-      secure: true,
-      sameSite: "strict",
     });
+
 
     // Respond with success message and token
     return response(res, 200, "User logged in successfully", {
