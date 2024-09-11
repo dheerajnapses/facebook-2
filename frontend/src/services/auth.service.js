@@ -37,6 +37,7 @@ export const logout = async()=>{
 export const checkUserAuth = async () => {
     try {
       const response = await axiosInstance.get('/users/check-auth');
+      console.log('this is service responce', response)
       return response?.data; // Ensure this matches your API response structure
     } catch (error) {
       if (error.response?.status === 401) {
