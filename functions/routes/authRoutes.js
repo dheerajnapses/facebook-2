@@ -18,12 +18,13 @@ router.get('/google', passport.authenticate('google', {
 router.get('/google/callback',
     passport.authenticate('google', { failureRedirect: `${process.env.UI_URL}/user-login`, session: false }),
     (req, res) => {
-        const accessToken = generateToken(req.user)
-        const authToken = { accessToken };
+        const accessToken = generateToken(req?.user);
 
-        res.cookie("auth_token", authToken, {
-            httpOnly: true,
-          });
+        // Set token in a cookie
+        res.cookie("auth_token", accessToken, {
+          httpOnly: true,
+          sameSite: "strict"
+        });
       
         res.redirect(`${process.env.UI_URL}`);
     }

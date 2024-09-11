@@ -1,22 +1,19 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
-const response = require("../utils/responseHandler"); 
+const response = require("../utils/responseHandler");
 const { generateToken } = require("../utils/generateToken");
 
 const registerUser = async (req, res) => {
   try {
     const { username, email, password, gender, dateOfBirth } = req.body;
+
     // Check if the user already exists
     const existingUser = await User.findOne({ email });
     console.log('Existing user:', existingUser);
 
     if (existingUser) {
-      return response(
-        res,
-        400,
-        "User with this email already exists"
-      );
+      return response(res, 400, "User with this email already exists");
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -33,11 +30,11 @@ const registerUser = async (req, res) => {
     console.log('New user saved:', newUser);
 
     const accessToken = generateToken(newUser);
-    const authToken = { accessToken };
 
     // Set token in a cookie
-    res.cookie("auth_token", authToken, {
+    res.cookie("auth_token", accessToken, {
       httpOnly: true,
+      sameSite: "strict"
     });
 
     // Respond with success message and user data (excluding password)
@@ -50,11 +47,9 @@ const registerUser = async (req, res) => {
       isAuthenticated: newUser.isAuthenticated
     });
   } catch (error) {
-    // Use custom response for errors
     return response(res, 500, "Internal Server error", error.message);
   }
 };
-
 
 const loginUser = async (req, res) => {
   try {
@@ -70,36 +65,33 @@ const loginUser = async (req, res) => {
     }
 
     // Create JWT token
-    const accessToken = generateToken(user)
-    const authToken = { accessToken };
+    const accessToken = generateToken(user);
 
     // Set token in a cookie
-    res.cookie("auth_token", authToken, {
+    res.cookie("auth_token", accessToken, {
       httpOnly: true,
+      sameSite: "strict"
     });
 
-
-    // Respond with success message and token
+    // Respond with success message and user data
     return response(res, 200, "User logged in successfully", {
       username: user.username,
       email: user.email,
-      isAuthenticated:user.isAuthenticated
+      isAuthenticated: user.isAuthenticated
     });
   } catch (error) {
-    // Use custom response for errors
     return response(res, 500, "Internal Server error", error.message);
   }
 };
 
-
 const logout = (req, res) => {
   try {
     res.cookie("auth_token", "", { expires: new Date(0) });
-    return response(res, 200, "successfully logged out");
+    return response(res, 200, "Successfully logged out");
   } catch (error) {
     console.error(error);
     return response(res, 500, "Internal Server error");
   }
 };
 
-module.exports = { registerUser, loginUser,logout };
+module.exports = { registerUser, loginUser, logout };
