@@ -19,6 +19,7 @@ const LayoutWrapper = ({ children }) => {
       try {
         if (!isLoginPage) {
           const response = await checkUserAuth();
+          console.log('this is responce',response)
           if (response?.data?.isAuthenticated) {
             setUser(response?.data);
           } else {
