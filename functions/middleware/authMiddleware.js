@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 
 const authMiddleware = (req, res, next) => {
-    const authToken = req?.cookies?.auth_token; // Expecting a string here
+    const authToken = req?.cookies?.auth_token; 
     if (!authToken) {
         return res.status(401).json({ message: 'Authentication required ! provide token' });
     }

@@ -31,11 +31,12 @@ const registerUser = async (req, res) => {
 
     const accessToken = generateToken(newUser);
 
-    // Set token in a cookie
     res.cookie("auth_token", accessToken, {
       httpOnly: true,
+      secure: process.env.NODE_ENV === "production", // Ensure this is true in production
       sameSite: "strict"
     });
+    
 
     // Respond with success message and user data (excluding password)
     return response(res, 201, "User registered successfully", {
@@ -67,11 +68,12 @@ const loginUser = async (req, res) => {
     // Create JWT token
     const accessToken = generateToken(user);
 
-    // Set token in a cookie
     res.cookie("auth_token", accessToken, {
       httpOnly: true,
+      secure: process.env.NODE_ENV === "production", // Ensure this is true in production
       sameSite: "strict"
     });
+    
 
     // Respond with success message and user data
     return response(res, 200, "User logged in successfully", {

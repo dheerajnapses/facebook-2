@@ -20,11 +20,12 @@ router.get('/google/callback',
     (req, res) => {
         const accessToken = generateToken(req?.user);
 
-        // Set token in a cookie
         res.cookie("auth_token", accessToken, {
-          httpOnly: true,
-          sameSite: "strict"
-        });
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production", // Ensure this is true in production
+            sameSite: "strict"
+          });
+          
       
         res.redirect(`${process.env.UI_URL}`);
     }
