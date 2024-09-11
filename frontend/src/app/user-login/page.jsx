@@ -12,6 +12,7 @@ import { yupResolver } from "@hookform/resolvers/yup"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { loginUser, registerUser } from '@/services/auth.service'
 import { useRouter } from 'next/navigation'
+import useUserStore from '@/Store/userStore'
 
 export default function LoginSignup() {
   const [isLoading, setIsLoading] = useState(false)
