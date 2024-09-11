@@ -40,10 +40,6 @@ export const checkUserAuth = async () => {
       console.log('this is service responce', response)
       return response?.data; // Ensure this matches your API response structure
     } catch (error) {
-      if (error.response?.status === 401) {
-        throw new Error('Unauthorized'); // Throw a specific error for unauthorized access
-      }
       console.error('Error checking authentication:', error); // Log error for other cases
-      throw error; // Re-throw error to be handled by the calling function
     }
   };
