@@ -17,36 +17,32 @@ const LayoutWrapper = ({ children }) => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        if (!isLoginPage) {
-          const response = await checkUserAuth();
-          console.log('this is responce',response)
-          if (response?.isAuthenticated) {
-            setUser(response);
-          } else {
-            router.push('/user-login'); // Redirect to login if not authenticated
-          }
-        } else if (user && isLoginPage) {
-          // If the user is authenticated and they are on the login page, redirect them to home
-          router.push('/');
+        const response = await checkUserAuth();
+        console.log('Auth response:', response);
+
+        if (response?.isAuthenticated) {
+          setUser(response);
+        } else {
+          router.push('/user-login');
         }
       } catch (error) {
         console.error('Authentication check failed:', error);
         if (!isLoginPage) {
-          router.push('/user-login'); // Redirect to login page in case of error
+          router.push('/user-login');
         }
       } finally {
-        setLoading(false); // Set loading to false after checking auth
+        setLoading(false);
       }
     };
 
-    if (!user) {
-      checkAuth(); // Only check authentication if user is not already set
-    } else if (isLoginPage && user) {
-      router.push('/'); // Redirect authenticated user away from login page
+    if (!user && !isLoginPage) {
+      checkAuth();
+    } else if (user && isLoginPage) {
+      router.push('/');
     } else {
-      setLoading(false); // If user is already set, no need to load
+      setLoading(false);
     }
-  }, [user, setUser, router, pathname, isLoginPage]);
+  }, [user, isLoginPage, router, setUser]);
 
   if (loading) {
     return <Loader />;
