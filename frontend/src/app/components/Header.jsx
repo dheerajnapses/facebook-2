@@ -104,8 +104,9 @@ const Header = () => {
 
   const handleLogout = async () => {
     try {
-      await logout();
+      const logout = await logout();
       await clearUser();
+      console.log('this is another logout',logout);
       router.push('/user-login');
     } catch (error) {
       console.error('Logout error:', error);
