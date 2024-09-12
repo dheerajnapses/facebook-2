@@ -17,7 +17,6 @@ export const usePostStore = create((set) => ({
       set({ posts, loading: false });
     } catch (error) {
       set({ error, loading: false });
-      toast.error('Failed to load posts');
     }
   },
     // Fetch posts
@@ -28,7 +27,6 @@ export const usePostStore = create((set) => ({
         set({ userPosts, loading: false });
       } catch (error) {
         set({ error, loading: false });
-        toast.error('Failed to load posts');
       }
     },
 
@@ -40,7 +38,6 @@ export const usePostStore = create((set) => ({
         set({ storyPosts, loading: false });
       } catch (error) {
         set({ error, loading: false });
-        toast.error('Failed to load posts');
       }
     },
 
@@ -79,7 +76,8 @@ export const usePostStore = create((set) => ({
   // Like a post
   handleLikePost: async (postId) => {
     try {
-      await likePost(postId);
+      const result =await likePost(postId);
+      console.log(result);
       toast.success('Post liked');
     } catch (error) {
       set({ error });

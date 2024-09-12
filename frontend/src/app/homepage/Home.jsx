@@ -6,19 +6,19 @@ import PostCard from "@/app/posts/PostCard"
 import RightSidebar from "@/app/components/RightSidebar"
 import { usePostStore } from "@/Store/usePostStore"
 import StorySection from "../posts/AddStory"
+import { PostSkeleton } from "@/lib/Skeleton"
 
 const HomePage = () => {
   const [isPostModalOpen, setIsPostModalOpen] = useState(false);
   const [likedPosts, setLikedPosts] = useState(new Set()); 
 
-  const { posts,handleSharePost, fetchPosts, handleLikePost, handleAddComment } = usePostStore();
+  const { posts,handleSharePost,loading, fetchPosts, handleLikePost, handleAddComment } = usePostStore();
 
   useEffect(() => {
     fetchPosts();
   }, [fetchPosts]);
 
   useEffect(() => {
-    // Load liked posts from local storage
     const savedLikes = localStorage.getItem('likedPosts');
     if (savedLikes) {
       setLikedPosts(new Set(JSON.parse(savedLikes)));
@@ -59,9 +59,13 @@ const HomePage = () => {
               setIsPostModalOpen={setIsPostModalOpen}
             />
             <div className="mt-6 space-y-6">
-              {posts.map(post => (
+            {loading
+                ? Array(3) 
+                    .fill(null)
+                    .map((_, index) => <PostSkeleton key={index} />)
+                :posts.map(post => (
                 <PostCard
-                  key={post.id}
+                  key={post._id}
                   post={post}
                   isLiked={likedPosts.has(post._id)}
                   onLike={() => handleLike(post._id)}

@@ -5,12 +5,13 @@ import { Button } from "@/components/ui/button"
 import {  ChevronLeft } from 'lucide-react'
 import Sidebar from '../components/Sidebar'
 import { usePostStore } from '@/Store/usePostStore'
+import { PostSkeleton } from '@/lib/Skeleton'
 
 const page = () => {
   const [likedPosts, setLikedPosts] = useState(new Set()); 
 
 
-  const { posts, fetchPosts, handleLikePost, handleSharePost,handleAddComment } = usePostStore();
+  const { posts, fetchPosts, loading,handleLikePost, handleSharePost,handleAddComment } = usePostStore();
   useEffect(() => {
     fetchPosts(); 
   }, [fetchPosts]);
@@ -50,7 +51,11 @@ const page = () => {
               Back to Feed
             </Button>
             <div className="max-w-3xl mx-auto">
-              {videoPosts.map((post) => (
+            {loading
+                ? Array(3) 
+                    .fill(null)
+                    .map((_, index) => <PostSkeleton key={index} />)
+                :videoPosts.map((post) => (
                 <VideoCard key={post._id} post={post}
                 isLiked={likedPosts.has(post._id)}
                 onLike={() => handleLike(post._id)}

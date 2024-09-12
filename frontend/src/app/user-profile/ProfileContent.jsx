@@ -8,9 +8,10 @@ import { useEffect, useState } from "react";
 import MutualFriends from "./Content/MutualFriends";
 import { Home, Heart, Briefcase, GraduationCap, Phone, Mail, Cake, MapPin } from "lucide-react";
 import EditBio from "./Content/EditBio";
+import { PostSkeleton } from "@/lib/Skeleton";
 
 export function ProfileContent({ activeTab, id,profileData,isOwner,loadProfile}) {
-  const { userPosts, fetchUserPost,handleSharePost ,handleLikePost,handleAddComment} = usePostStore();
+  const { userPosts,loading, fetchUserPost,handleSharePost ,handleLikePost,handleAddComment} = usePostStore();
   const [likedPosts, setLikedPosts] = useState(new Set()); 
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
  
@@ -59,7 +60,11 @@ export function ProfileContent({ activeTab, id,profileData,isOwner,loadProfile})
     posts: (
       <div className="flex flex-col lg:flex-row gap-6">
         <div className="w-full lg:w-[70%] space-y-6">
-        {userPosts.map((post) => (
+        {loading
+                ? Array(3) 
+                    .fill(null)
+                    .map((_, index) => <PostSkeleton key={index} />)
+                :userPosts.map((post) => (
          <PostContent
           key={post?._id}
           post={post} 
