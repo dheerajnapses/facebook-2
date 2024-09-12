@@ -87,12 +87,20 @@ const loginUser = async (req, res) => {
 
 const logout = (req, res) => {
   try {
-    res.cookie("auth_token", "", { expires: new Date(0) });
+    // Clear the auth_token cookie by setting its value to an empty string and expire it
+    res.cookie("auth_token", "", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production", // Only secure in production
+      sameSite: "None", // Ensure this matches how it was set initially
+      expires: new Date(0) // Expire the cookie immediately
+    });
+    
     return response(res, 200, "Successfully logged out");
   } catch (error) {
     console.error(error);
     return response(res, 500, "Internal Server error");
   }
 };
+
 
 module.exports = { registerUser, loginUser, logout };
