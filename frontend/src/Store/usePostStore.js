@@ -76,12 +76,9 @@ export const usePostStore = create((set) => ({
   // Like a post
   handleLikePost: async (postId) => {
     try {
-      const result =await likePost(postId);
-      console.log(result);
-      toast.success('Post liked');
+      await likePost(postId);
     } catch (error) {
       set({ error });
-      toast.error('Failed to like post');
     }
   },
 

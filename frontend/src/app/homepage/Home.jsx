@@ -7,6 +7,7 @@ import RightSidebar from "@/app/components/RightSidebar"
 import { usePostStore } from "@/Store/usePostStore"
 import StorySection from "../posts/AddStory"
 import { PostSkeleton } from "@/lib/Skeleton"
+import toast from "react-hot-toast"
 
 const HomePage = () => {
   const [isPostModalOpen, setIsPostModalOpen] = useState(false);
@@ -30,8 +31,10 @@ const HomePage = () => {
     const updatedLikedPosts = new Set(likedPosts);
     if (updatedLikedPosts.has(postId)) {
       updatedLikedPosts.delete(postId);
+      toast.error('Post disliked successfully');
     } else {
       updatedLikedPosts.add(postId);
+      toast.success('Post liked successfully');
     }
     setLikedPosts(updatedLikedPosts);
     localStorage.setItem('likedPosts', JSON.stringify(Array.from(updatedLikedPosts)));
