@@ -27,15 +27,15 @@ const registerUser = async (req, res) => {
     });
 
     await newUser.save();
-    console.log('New user saved:', newUser);
 
     const accessToken = generateToken(newUser);
 
     res.cookie("auth_token", accessToken, {
       httpOnly: true,
-      sameSite: "None" 
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "None",
     });
-    
+      
 
     // Respond with success message and user data (excluding password)
     return response(res, 201, "User registered successfully", {
@@ -69,8 +69,10 @@ const loginUser = async (req, res) => {
 
     res.cookie("auth_token", accessToken, {
       httpOnly: true,
-      sameSite: "None" 
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "None",
     });
+    
     
 
     // Respond with success message and user data
