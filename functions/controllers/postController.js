@@ -76,6 +76,7 @@ const createStoryPost = async (req, res) => {
 const getPost = async (req, res) => {
     try {
         const posts = await Post.find()
+        .sort({ createdAt: -1 }) 
         .populate('userId', '_id username profilePicture email')
         .populate({
             path: 'comments.user', 
@@ -93,6 +94,7 @@ const getPost = async (req, res) => {
 const getAllStoryPost = async (req, res) => {
     try {
         const posts = await Story.find()
+        .sort({ createdAt: -1 }) 
         .populate('user', '_id username profilePicture email')
         return response(res, 201, 'Story Post get successfully', posts);
     } catch (error) {
@@ -112,6 +114,7 @@ const getPostsByUserId = async (req, res) => {
             return response(res, 400, 'User ID is required');
         }
         const posts = await Post.find({ userId })
+        .sort({ createdAt: -1 }) 
         .populate('userId')
         .populate({
             path: 'comments.user', 
