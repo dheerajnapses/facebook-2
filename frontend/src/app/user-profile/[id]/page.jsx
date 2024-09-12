@@ -4,7 +4,6 @@ import { ProfileHeader } from "../ProfileHeader";
 import { ProfileTabs } from "../ProfileTabs";
 import { useParams } from "next/navigation";
 import { fetchUserProfile } from "@/services/users.service";
-import { Spinner } from "@/lib/Skeleton";
 
 export default function UserProfile() {
   const params = useParams();  
@@ -34,9 +33,6 @@ export default function UserProfile() {
     }
   }, [id]);
 
-  if (loading) {
-    return <Spinner />; // Render a spinner or loader while fetching data
-  }
 
   if (!profileData) {
     return <div>User profile not found</div>;

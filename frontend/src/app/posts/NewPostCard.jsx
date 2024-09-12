@@ -25,7 +25,6 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import useUserStore from "@/Store/userStore";
 import dynamic from 'next/dynamic';
 import { usePostStore } from "@/Store/usePostStore";
-import { Spinner } from "@/lib/Skeleton";
 
 const Picker = dynamic(() => import('emoji-picker-react'), { ssr: false });
 
@@ -226,7 +225,7 @@ const NewPostCard = ({
                   className="bg-blue-500 text-white"
                   disabled={loading} 
                 >
-               {loading ? 'Loading...' : 'Post'} 
+                {loading ? 'Loading...' : 'Post'} 
                 </Button>
               </div>
             </DialogContent>

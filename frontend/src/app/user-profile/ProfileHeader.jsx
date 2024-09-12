@@ -3,7 +3,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Camera, X, Upload } from "lucide-react"
 import { useEffect, useRef, useState } from "react";
 import { fetchUserProfile, updateCoverPhoto, updateUserProfile } from "@/services/users.service";
-import { Spinner } from "@/lib/Skeleton";
 import { useForm, Controller } from "react-hook-form"
 import { motion, AnimatePresence } from "framer-motion"
 import { Input } from "@/components/ui/input"
@@ -111,9 +110,6 @@ export function ProfileHeader({id,profileData,isOwner,setProfileData,loadProfile
   }
 
 
-  if (!profileData) {
-    return <Spinner/>;
-  }
 
   return (
     <div className="relative">
