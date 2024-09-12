@@ -33,9 +33,9 @@ const registerUser = async (req, res) => {
     res.cookie("auth_token", accessToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: "None",
+      sameSite: "None" 
     });
-      
+    
 
     // Respond with success message and user data (excluding password)
     return response(res, 201, "User registered successfully", {
@@ -69,10 +69,9 @@ const loginUser = async (req, res) => {
 
     res.cookie("auth_token", accessToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "None",
+      secure: process.env.NODE_ENV === "production", // Ensure this is true in production
+      sameSite: "None" 
     });
-    
     
 
     // Respond with success message and user data

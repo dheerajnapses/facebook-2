@@ -22,10 +22,11 @@ router.get('/google/callback',
 
         res.cookie("auth_token", accessToken, {
             httpOnly: true,
-            secure: process.env.NODE_ENV === "production",
-            sameSite: "None",
+            secure: process.env.NODE_ENV === "production", // Ensure this is true in production
+            sameSite: "None" 
           });
           
+      
         res.redirect(`${process.env.UI_URL}`);
     }
 );
