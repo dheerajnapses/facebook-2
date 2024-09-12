@@ -36,8 +36,9 @@ const PostContent = ({ post, isLiked, onLike, onComment,onShare }) => {
 
 
   const generateShareableUrl = () => {
-    return `http://localhost:3000/${post._id}`;
-  };
+    return `https://facebook-theta.vercel.app/user-profile/${post?.userId?._id}`
+  }
+
 
   const handleShare = (platform) => {
     const url = generateShareableUrl();
@@ -54,9 +55,7 @@ const PostContent = ({ post, isLiked, onLike, onComment,onShare }) => {
         shareUrl = `https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(url)}`;
         break;
       case 'copy':
-        navigator.clipboard.writeText(url).then(() => {
-        
-        });
+        navigator.clipboard.writeText(url)
         setIsShareDialogOpen(false);
         return;
       default:

@@ -18,8 +18,6 @@ const LayoutWrapper = ({ children }) => {
     const checkAuth = async () => {
       try {
         const response = await checkUserAuth();
-        console.log('Auth response:', response);
-
         if (response?.isAuthenticated) {
           setUser(response);
         } else {

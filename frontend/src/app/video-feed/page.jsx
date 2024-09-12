@@ -10,7 +10,7 @@ const page = () => {
   const [likedPosts, setLikedPosts] = useState(new Set()); 
 
 
-  const { posts, fetchPosts, handleLikePost, handleAddComment } = usePostStore();
+  const { posts, fetchPosts, handleLikePost, handleSharePost,handleAddComment } = usePostStore();
   useEffect(() => {
     fetchPosts(); 
   }, [fetchPosts]);
@@ -51,11 +51,15 @@ const page = () => {
             </Button>
             <div className="max-w-3xl mx-auto">
               {videoPosts.map((post) => (
-                <VideoCard key={post.id} post={post}
+                <VideoCard key={post._id} post={post}
                 isLiked={likedPosts.has(post._id)}
                 onLike={() => handleLike(post._id)}
                 onComment={async (comment) => {
                   await handleAddComment(post._id, comment.text);
+                  await fetchPosts(); 
+                }}
+                onShare = {async() => {
+                  await handleSharePost(post._id)
                   await fetchPosts(); 
                 }}
                 />

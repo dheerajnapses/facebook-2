@@ -19,7 +19,7 @@ import VideoComments from './VideoComments'
 import useUserStore from '@/Store/userStore'
 
 
-const VideoCard = ({ post, isLiked, onComment, onLike }) => {
+const VideoCard = ({ post, isLiked, onComment, onLike,onShare }) => {
   const [showComments, setShowComments] = useState(false)
   const commentInputRef = useRef(null)
   const [commentText, setCommentText] = useState(""); 
@@ -43,11 +43,37 @@ const VideoCard = ({ post, isLiked, onComment, onLike }) => {
     }
   };
 
-  const handleShare = () => {
-    // Implement share functionality here
-    console.log('Sharing post:', post.id)
-    setIsShareDialogOpen(false)
+ 
+  const generateShareableUrl = () => {
+    return `https://facebook-theta.vercel.app/user-profile/${post?.userId?._id}`
   }
+
+  const handleShare = (platform) => {
+    const url = generateShareableUrl();
+    let shareUrl;
+
+    switch (platform) {
+      case 'facebook':
+        shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
+        break;
+      case 'twitter':
+        shareUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}`;
+        break;
+      case 'linkedin':
+        shareUrl = `https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(url)}`;
+        break;
+      case 'copy':
+        navigator.clipboard.writeText(url);
+        setIsShareDialogOpen(false);
+        return;
+      default:
+        return;
+    }
+
+    window.open(shareUrl, '_blank');
+    setIsShareDialogOpen(false);
+  };
+
 
   return (
     <motion.div
@@ -96,7 +122,7 @@ const VideoCard = ({ post, isLiked, onComment, onLike }) => {
             </Button>
             <Dialog open={isShareDialogOpen} onOpenChange={setIsShareDialogOpen}>
               <DialogTrigger asChild>
-                <Button variant="ghost" className="flex items-center">
+                <Button variant="ghost" className="flex items-center" onClick={onShare}>
                   <Share2 className="mr-2 h-4 w-4" />
                   <span>Share</span>
                 </Button>
