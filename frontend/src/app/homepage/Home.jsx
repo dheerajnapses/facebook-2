@@ -44,6 +44,9 @@ const HomePage = () => {
     }
   };
 
+  if(loading){
+    <PostSkeleton/>
+  }
   return (
     <div className="flex flex-col min-h-screen bg-background text-foreground">
       <main className="flex flex-1 pt-16">
@@ -59,11 +62,7 @@ const HomePage = () => {
               setIsPostModalOpen={setIsPostModalOpen}
             />
             <div className="mt-6 space-y-6">
-            {loading
-                ? Array(3) 
-                    .fill(null)
-                    .map((_, index) => <PostSkeleton key={index} />)
-                :posts.map(post => (
+            {posts.map(post => (
                 <PostCard
                   key={post._id}
                   post={post}

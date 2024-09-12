@@ -53,18 +53,14 @@ export function ProfileContent({ activeTab, id,profileData,isOwner,loadProfile})
     }
   };
 
-
-
-
+ if(loading){
+   <PostSkeleton/>
+ }
   const tabContent = {
     posts: (
       <div className="flex flex-col lg:flex-row gap-6">
         <div className="w-full lg:w-[70%] space-y-6">
-        {loading
-                ? Array(3) 
-                    .fill(null)
-                    .map((_, index) => <PostSkeleton key={index} />)
-                :userPosts.map((post) => (
+        {userPosts.map((post) => (
          <PostContent
           key={post?._id}
           post={post} 

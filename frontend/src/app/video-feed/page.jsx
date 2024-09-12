@@ -41,6 +41,10 @@ const page = () => {
 
     // Filter posts to only include those with mediaType 'video'
     const videoPosts = posts.filter(post => post.mediaType === 'video');
+
+    if(loading){
+      <PostSkeleton/>
+    }
   
     return (
         <div className="mt-12 min-h-screen">
@@ -51,11 +55,7 @@ const page = () => {
               Back to Feed
             </Button>
             <div className="max-w-3xl mx-auto">
-            {loading
-                ? Array(3) 
-                    .fill(null)
-                    .map((_, index) => <PostSkeleton key={index} />)
-                :videoPosts.map((post) => (
+            {videoPosts.map((post) => (
                 <VideoCard key={post._id} post={post}
                 isLiked={likedPosts.has(post._id)}
                 onLike={() => handleLike(post._id)}
