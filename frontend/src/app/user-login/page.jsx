@@ -12,6 +12,7 @@ import { yupResolver } from "@hookform/resolvers/yup"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { loginUser, registerUser } from '@/services/auth.service'
 import { useRouter } from 'next/navigation'
+import toast from 'react-hot-toast'
 
 export default function LoginSignup() {
   const [isLoading, setIsLoading] = useState(false)
@@ -30,7 +31,7 @@ export default function LoginSignup() {
     password: yup.string().required("Password is required")
   })
 
-  const { register: registerLogin, handleSubmit: handleSubmitLogin, formState: { errors: errorsLogin } } = useForm({
+  const { register: registerLogin, handleSubmit: handleSubmitLogin, reset, formState: { errors: errorsLogin } } = useForm({
     resolver: yupResolver(loginSchema)
   })
 
@@ -45,11 +46,13 @@ export default function LoginSignup() {
       if(result.status === "success") {
         router.push('/')
       }
-      console.log('Login data:', data)
+      toast.success('User login successfully')
     } catch (error) {
        console.log('error while login',error)
+       toast.error('Invalid email or password')
     }finally{
       setIsLoading(false)
+       reset()
     }
   }
 
@@ -61,11 +64,13 @@ export default function LoginSignup() {
       if(result.status === "success") {
         router.push('/')
       }
-      console.log('signin data:', data)
+      toast.success('User registration successfully')
     } catch (error) {
        console.log('error while login',error)
+       toast.error('Email already exists')
     }finally{
       setIsLoading(false)
+      reset()
     }
   }
 

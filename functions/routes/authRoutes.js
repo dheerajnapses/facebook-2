@@ -22,7 +22,6 @@ router.get('/google/callback',
 
         res.cookie("auth_token", accessToken, {
             httpOnly: true,
-            secure: process.env.NODE_ENV === "production", // Ensure this is true in production
             sameSite: "None" 
           });
           
