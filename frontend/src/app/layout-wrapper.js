@@ -7,7 +7,7 @@ import Header from '@/app/components/Header';
 import Loader from '@/lib/Loader';
 
 const LayoutWrapper = ({ children }) => {
-  const { user, setUser } = useUserStore();
+  const { user, setUser,clearUser } = useUserStore();
   const router = useRouter();
   const pathname = usePathname();
   const [loading, setLoading] = useState(true);
@@ -19,12 +19,14 @@ const LayoutWrapper = ({ children }) => {
       try {
         const response = await checkUserAuth();
         if (response?.isAuthenticated) {
-          setUser(response);
+          setUser(response?.user);
         } else {
+          clearUser()
           router.push('/user-login');
         }
       } catch (error) {
         console.error('Authentication check failed:', error);
+        clearUser();
         if (!isLoginPage) {
           router.push('/user-login');
         }

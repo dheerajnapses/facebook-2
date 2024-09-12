@@ -12,7 +12,6 @@ const userSchema = new mongoose.Schema({
   following: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
   followerCount: { type: Number, default: 0 },
   followingCount: { type: Number, default: 0 },
-  isAuthenticated: { type: Boolean, default: false },
   bio: { type: mongoose.Schema.Types.ObjectId, ref: 'Bio' },
 }, { timestamps: true });
 

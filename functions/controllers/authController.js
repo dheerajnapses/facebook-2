@@ -23,7 +23,6 @@ const registerUser = async (req, res) => {
       password: hashedPassword,
       gender,
       dateOfBirth,
-      isAuthenticated: true
     });
 
     await newUser.save();
@@ -44,7 +43,6 @@ const registerUser = async (req, res) => {
       email: newUser.email,
       gender: newUser.gender,
       dateOfBirth: newUser.dateOfBirth,
-      isAuthenticated: newUser.isAuthenticated
     });
   } catch (error) {
     return response(res, 500, "Internal Server error", error.message);
@@ -78,7 +76,6 @@ const loginUser = async (req, res) => {
     return response(res, 200, "User logged in successfully", {
       username: user.username,
       email: user.email,
-      isAuthenticated: user.isAuthenticated
     });
   } catch (error) {
     return response(res, 500, "Internal Server error", error.message);

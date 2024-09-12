@@ -36,8 +36,14 @@ export const logout = async()=>{
 export const checkUserAuth = async () => {
   try {
     const response = await axiosInstance.get('/users/check-auth');
-    return response?.data?.data;
+    if(response?.data?.status === 'success'){
+        return { isAuthenticated: true, user: response?.data?.data };
+    }
+    else if (response.status === 401) {  
+        return { isAuthenticated: false };
+      }
   } catch (error) {
     console.error('Error checking authentication:', error);
+    return { isAuthenticated: false };
   }
 };

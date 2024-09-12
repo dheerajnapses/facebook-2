@@ -47,9 +47,7 @@ const HomePage = () => {
     }
   };
 
-  if(loading){
-    <PostSkeleton/>
-  }
+
   return (
     <div className="flex flex-col min-h-screen bg-background text-foreground">
       <main className="flex flex-1 pt-16">

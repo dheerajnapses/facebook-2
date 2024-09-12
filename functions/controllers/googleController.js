@@ -29,7 +29,6 @@ passport.use(new GoogleStrategy({
                 username: displayName,
                 email: emails[0].value,
                 profilePicture: photos[0]?.value,
-                isAuthenticated: emails[0].verified
             });
 
             done(null, user);

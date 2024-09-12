@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Button } from "@/components/ui/button"
@@ -31,13 +31,20 @@ export default function LoginSignup() {
     password: yup.string().required("Password is required")
   })
 
-  const { register: registerLogin, handleSubmit: handleSubmitLogin, reset, formState: { errors: errorsLogin } } = useForm({
+  // Forms and handlers
+  const { register: registerLogin, handleSubmit: handleSubmitLogin, reset: resetLoginForm, formState: { errors: errorsLogin } } = useForm({
     resolver: yupResolver(loginSchema)
   })
 
-  const { register: registerSignup, handleSubmit: handleSubmitSignup, formState: { errors: errorsSignup } } = useForm({
+  const { register: registerSignup, handleSubmit: handleSubmitSignup, reset: resetSignupForm, formState: { errors: errorsSignup } } = useForm({
     resolver: yupResolver(registerSchema)
   })
+
+  // Reset form on mount
+  useEffect(() => {
+    resetLoginForm();
+    resetSignupForm();
+  }, [resetLoginForm, resetSignupForm]);
 
   const onSubmitLogin = async (data) => {
     try {
@@ -52,7 +59,6 @@ export default function LoginSignup() {
        toast.error('Invalid email or password')
     }finally{
       setIsLoading(false)
-       reset()
     }
   }
 
@@ -70,7 +76,6 @@ export default function LoginSignup() {
        toast.error('Email already exists')
     }finally{
       setIsLoading(false)
-      reset()
     }
   }
 
