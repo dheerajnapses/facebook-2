@@ -15,7 +15,6 @@ import {
   Menu,
   Users,
   LogOut,
-  User2,
   User,
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -42,7 +41,7 @@ const Header = () => {
   const [activeItem, setActiveItem] = useState("home");
   const [userList, setUserList] = useState([]);
   const [filteredUsers, setFilteredUsers] = useState([]);
-  const [loading, setLoading] = useState(false); // New loading state
+  const [loading, setLoading] = useState(false);
   const searchRef = useRef(null);
   const router = useRouter();
   const { user, clearUser } = useUserStore();
@@ -52,13 +51,13 @@ const Header = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        setLoading(true); // Show loader
+        setLoading(true);
         const response = await getAllUsers();
         setUserList(response);
       } catch (error) {
         console.error('Error fetching users:', error);
       } finally {
-        setLoading(false); // Hide loader
+        setLoading(false);
       }
     };
 
@@ -71,10 +70,10 @@ const Header = () => {
         user.username.toLowerCase().includes(searchQuery.toLowerCase())
       );
       setFilteredUsers(filtered);
-      setIsSearchOpen(true); // Ensure dropdown is open when there's a query
+      setIsSearchOpen(true);
     } else {
       setFilteredUsers([]);
-      setIsSearchOpen(false); // Close dropdown if search query is empty
+      setIsSearchOpen(false);
     }
   }, [searchQuery, userList]);
 
@@ -91,14 +90,14 @@ const Header = () => {
 
   const handleUserClick = async (userId) => {
     try {
-      setLoading(true); // Show loader when navigating to user profile
+      setLoading(true);
       setIsSearchOpen(false);
+      setSearchQuery("");
       await router.push(`/user-profile/${userId}`);
-      setSearchQuery(""); // Clear search query after user selection
     } catch (error) {
       console.error('Navigation error:', error);
     } finally {
-      setLoading(false); // Hide loader after navigation
+      setLoading(false);
     }
   };
 
@@ -112,13 +111,24 @@ const Header = () => {
     }
   };
 
-  // Close dropdown when clicking outside the input and results, except if clicking inside
-  const handleSearchClose = () => {
-    setIsSearchOpen(false);
+  const handleSearchClose = (event) => {
+    // Delay closing to allow click events to process
+    setTimeout(() => {
+      if (!searchRef.current?.contains(event.target)) {
+        setIsSearchOpen(false);
+      }
+    }, 200);
   };
 
-  if(loading) {
-    <Loader/>
+  useEffect(() => {
+    document.addEventListener('click', handleSearchClose);
+    return () => {
+      document.removeEventListener('click', handleSearchClose);
+    };
+  }, []);
+
+  if (loading) {
+    return <Loader />;
   }
 
   return (
@@ -137,14 +147,13 @@ const Header = () => {
           <div className="relative" ref={searchRef}>
             <form onSubmit={handleSearchSubmit}>
               <div className="relative">
-                <Search className="absolute  left-2 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-400" />
                 <Input
                   className="pl-8 w-40 md:w-64 h-10 bg-gray-100 dark:bg-[rgb(58,59,60)] rounded-full"
                   placeholder="Search Facebook"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  onFocus={() => setIsSearchOpen(true)} // Open dropdown when focused
-                  onBlur={handleSearchClose} // Close dropdown on blur
+                  onFocus={() => setIsSearchOpen(true)}
                 />
               </div>
               {isSearchOpen && (
@@ -155,19 +164,19 @@ const Header = () => {
                         <div
                           key={user._id}
                           className="flex items-center space-x-8 p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md cursor-pointer"
+                          onClick={() => handleUserClick(user?._id)}
                         >    
-                        <Search  className="absolute text-sm text-gray-400" />
-                        <div className="flex items-center gap-2" onClick={() => handleUserClick(user?._id)}> 
-                        <Avatar className="h-8 w-8">
-                            {user.profilePicture ? (
-                              <AvatarImage src={user.profilePicture} alt={user.username} />
-                            ) : (
-                              <AvatarFallback>{user.username[0]}</AvatarFallback>
-                            )}
-                          </Avatar>
-                          <span>{user.username}</span>
+                          <Search className="absolute text-sm text-gray-400" />
+                          <div className="flex items-center gap-2"> 
+                            <Avatar className="h-8 w-8">
+                              {user.profilePicture ? (
+                                <AvatarImage src={user.profilePicture} alt={user.username} />
+                              ) : (
+                                <AvatarFallback>{user.username[0]}</AvatarFallback>
+                              )}
+                            </Avatar>
+                            <span>{user.username}</span>
                           </div>
-                         
                         </div>
                       ))
                     ) : (
@@ -193,9 +202,7 @@ const Header = () => {
               className={`relative text-gray-600 dark:text-gray-400 hover:text-blue-600 hover:bg-transparent ${
                 activeItem === name ? "text-blue-600" : ""
               } transition-colors duration-300`}
-              onClick={() => {
-                handleNavigation(path, name);
-              }}
+              onClick={() => handleNavigation(path, name)}
             >
               <Icon />
             </Button>
@@ -229,7 +236,7 @@ const Header = () => {
                 </Avatar>
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-64 z-50" align="end" >
+            <DropdownMenuContent className="w-64 z-50" align="end">
               <DropdownMenuLabel className="font-normal">
                 <div className="flex flex-col space-y-1">
                   <div className="flex items-center">
@@ -252,16 +259,14 @@ const Header = () => {
                 </div>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => handleNavigation(`/user-profile/${user?._id}`)}> 
-                <User/> <span className="ml-2">Profile</span>
+              <DropdownMenuItem onClick={() => handleNavigation(`/user-profile/${user?._id}`)}>
+                <User /> <span className="ml-2">Profile</span>
               </DropdownMenuItem>
               <DropdownMenuItem>
-                <MessageCircle/><span className="ml-2">Messages</span>
+                <MessageCircle /><span className="ml-2">Messages</span>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem
-                onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-              >
+              <DropdownMenuItem onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>
                 {theme === "light" ? (
                   <>
                     <Moon className="mr-2" />
@@ -275,7 +280,7 @@ const Header = () => {
                 )}
               </DropdownMenuItem>
               <DropdownMenuItem onClick={handleLogout}>
-               <LogOut/> <span className="ml-2">Logout</span>
+                <LogOut /> <span className="ml-2">Logout</span>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

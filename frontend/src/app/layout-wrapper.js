@@ -1,59 +1,71 @@
-'use client';
-import { useEffect, useState } from 'react';
-import { useRouter, usePathname } from 'next/navigation';
-import useUserStore from '@/Store/userStore';
-import { checkUserAuth } from '@/services/auth.service';
-import Header from '@/app/components/Header';
-import Loader from '@/lib/Loader';
+'use client'
 
-const LayoutWrapper = ({ children }) => {
-  const { user, setUser,clearUser } = useUserStore();
-  const router = useRouter();
-  const pathname = usePathname();
-  const [loading, setLoading] = useState(true);
+import { useEffect, useState } from 'react'
+import { useRouter, usePathname } from 'next/navigation'
+import useUserStore from '@/Store/userStore'
+import { checkUserAuth, logout } from '@/services/auth.service'
+import Header from '@/app/components/Header'
+import Loader from '@/lib/Loader'
 
-  const isLoginPage = pathname === '/user-login';
+export default function LayoutWrapper({ children }) {
+  const { user, setUser, clearUser } = useUserStore()
+  const router = useRouter()
+  const pathname = usePathname()
+  const [loading, setLoading] = useState(true)
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+
+  const isLoginPage = pathname === '/user-login'
 
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const response = await checkUserAuth();
+        const response = await checkUserAuth()
         if (response?.isAuthenticated) {
-          setUser(response?.user);
+          setUser(response?.user)
+          setIsAuthenticated(true)
         } else {
-          clearUser()
-          router.push('/user-login');
+          await handleLogout()
         }
       } catch (error) {
-        console.error('Authentication check failed:', error);
-        clearUser();
-        if (!isLoginPage) {
-          router.push('/user-login');
-        }
+        console.error('Authentication check failed:', error)
+        await handleLogout()
       } finally {
-        setLoading(false);
+        setLoading(false)
       }
-    };
-
-    if (!user && !isLoginPage) {
-      checkAuth();
-    } else if (user && isLoginPage) {
-      router.push('/');
-    } else {
-      setLoading(false);
     }
-  }, [user, isLoginPage, router, setUser]);
+
+    const handleLogout = async () => {
+      clearUser()
+      setIsAuthenticated(false)
+      try {
+        await logout() // Call the logout API
+      } catch (error) {
+        console.error('Logout failed:', error)
+      }
+      if (!isLoginPage) {
+        router.push('/user-login')
+      }
+    }
+
+    if (!isLoginPage) {
+      checkAuth()
+    } else {
+      setLoading(false)
+    }
+  }, [isLoginPage, router, setUser, clearUser])
 
   if (loading) {
-    return <Loader />;
+    return <Loader />
+  }
+
+  if (!isAuthenticated && !isLoginPage) {
+    return <Loader />
   }
 
   return (
     <>
-      {!isLoginPage && <Header />}
-      {children}
+      {!isLoginPage && isAuthenticated && <Header />}
+      {(isAuthenticated || isLoginPage) && children}
     </>
-  );
-};
-
-export default LayoutWrapper;
+  )
+}
